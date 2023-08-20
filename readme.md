@@ -21,7 +21,8 @@ npm install
 3. Start the server:
 
 ```bash
-node index.js
+npm run start (Production environment)
+npm run dev (Development environment)
 ```
 
 4. The backend server will be available at http://localhost:3001.
