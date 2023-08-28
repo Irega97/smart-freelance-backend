@@ -7,6 +7,7 @@ import bodyParser from'body-parser';
 //Importamos fichero de rutas
 import userRoutes from './routes/user.routes';
 import paymentsRoutes from './routes/payments.routes';
+import tasksRoutes from './routes/tasks.routes';
 
 //Inicializamos express
 const app = express();
@@ -25,6 +26,7 @@ app.use(bodyParser.json());
 //Llama a las rutas de la API
 app.use(userRoutes);
 app.use(paymentsRoutes);
+app.use(tasksRoutes);
 
 //Exportamos fichero como 'app'
 export default app;

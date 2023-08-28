@@ -1,37 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/User"
-
-//Hacemos una busqueda en la BBDD de todo lo que hay en demo
-//Es una busqueda asincrona, por eso usamos el await
-/* export const getUsers = async (req: Request, res: Response) => {
-    //El await hace que la siguiente linea no se ejecute
-    //hasta que el resultado no se haya obtenido
-    const results = await User.find({});
-    return res.status(400).json(results);
-} */
-
-// function getUsers(req:Request, res:Response): void {
-//     User.find({}).populate('tasks').then((data)=>{
-//         let status: number = 200;
-//         if(data==null) status = 404;
-//         console.log(data);
-//         return res.status(status).json(data);
-//     }).catch((err) => {
-//         console.log(err);
-//         return res.status(500).json(err);
-//     })
-// }
-
-// function getUserById(req:Request, res:Response): void {
-//     User.find({"_id":req.params.id}).populate('tasks').then((data)=>{
-//         let status: number = 200;
-//         if(data==null) status = 404;
-//         console.log(data);
-//         return res.status(status).json(data);
-//     }).catch((err) => {
-//         return res.status(500).json(err);
-//     })
-// }
+import Task from "../models/Task";
 
 function getUserByWallet(req:Request, res:Response): void {
     User.find({"walletAddress":req.params.walletAddress}).populate('createdTasks').then((data)=>{
@@ -43,12 +12,33 @@ function getUserByWallet(req:Request, res:Response): void {
     })
 }
 
+function getUserTasksByWallet(req:Request, res:Response): void {
+    User.find({"walletAddress":req.params.walletAddress}).then((user)=>{
+        console.log(user);
+        if(user) {
+            const usrId = user[0]._id;
+            Task.find({"owner": usrId}).then((data) => {
+                console.log(data);
+                let status: number = 200;
+                return res.status(status).json(data);
+            }, (error) => {
+                console.log(error);
+                return res.status(500).json(error);
+            })
+        } else {
+            return res.status(404).json({message: "User not found"});
+        }
+    }).catch((err) => {
+        return res.status(500).json(err);
+    })
+}
+
 function postUser(req: Request, res: Response) {
     if (req.body.walletAddress != null) {
         const user = new User({
             "name": req.body.name,
             "fullName": req.body.fullName,
-            "userName": req.body.username,
+            "username": req.body.username,
             "email": req.body.email,
             "image": req.body.image,
             "walletAddress": req.body.walletAddress
@@ -102,4 +92,4 @@ function deleteUserV2 (req:Request,res:Response){
 //     })
 // }
 
-export default { /* getUsers, getUserById, */ getUserByWallet, postUser, deleteUser/* , updateUser, deleteUser, deleteAll */ };
+export default { getUserByWallet, postUser, deleteUser, getUserTasksByWallet };

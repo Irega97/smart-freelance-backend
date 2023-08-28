@@ -1,37 +1,53 @@
-//Interfaces
-import mongoose, { Schema, Document, Date} from 'mongoose';
-// import User, {IUser} from './User';
+import mongoose, { Schema, Document } from 'mongoose';
+import { TaskStatus } from '../config/domains';
+import { IUser } from './User';
+import { IServiceContract } from './ServiceContract';
 
-//Interfaz para tratar respuesta como documento
 export interface ITask extends Document {
-    name: string;
-    startDate: Date;
-    endDate: Date;
-    status: string;
-    // owner: IUser['_id']; //Relacion con la coleccion courses
-    // customer: IUser['_id']; //Relacion con la coleccion courses
+    _id: mongoose.Types.ObjectId;
+    // taskNumber: number; AUTONUMBER TSK-{000000000}
+    name: string; // Task name
+    owner: IUser['_id']; // User that creates the task
+    contracts: IServiceContract['_id']; // Contracts related to the task
+    status: TaskStatus; // Task status (default "New")
+    description: string; // Task description
 }
 
-//Modelo de objeto que se guarda en la BBDD de MongoDB
-const taskSchema : any = new Schema({
+const taskSchema: Schema = new Schema({
+    // taskNumber: {
+    //     type: Number,
+    //     required: true,
+    //     unique: true
+    // },
     name: {
+        type: String,
+        required: true
+    },
+    owner: {
+        type: String,
+        required: true,
+        ref: 'User'
+    },
+    contracts: {
+        type: String,
+        ref: 'ServiceContract'
+    },
+    status: {
+        type: String,
+        default: 'New'
+    },
+    description: {
         type: String
     },
-    startDate: {
-        type: Date
-    },
-    endDate: {
-        type: Date
-    },
-    // owner: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: User
-    // },
-    // customer: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: User
-    // }
 });
 
-//Exportamos modelo para poder usarlo
+// const AutoIncrementFactory = require('mongoose-sequence')(mongoose);
+
+// taskSchema.plugin(AutoIncrementFactory, {
+//     id: 'task_number_seq',
+//     inc_field: 'taskNumber',
+//     reference_fields: ['taskNumber'],
+//     format: 'TSK-{{#formatNumber taskNumber "000000000"}}'
+// });
+
 export default mongoose.model<ITask>('Task', taskSchema);
