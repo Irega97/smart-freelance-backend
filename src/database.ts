@@ -9,7 +9,16 @@ import config from './config/config';
 //     useUnifiedTopology: true,
 // }
 
-mongoose.connect(config.DB.URI/* , dbOptions */);
+// mongoose.connect(config.DB.URI/* , dbOptions */);
+try {
+    mongoose.connect(config.DB.URI);
+} catch(error){
+    handleError(error);
+}
+
+function handleError(error: any) {
+    console.log(error);
+}
 
 const connection = mongoose.connection;
 

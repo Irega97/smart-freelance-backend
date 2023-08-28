@@ -7,6 +7,7 @@ export interface ITask extends Document {
     name: string;
     startDate: Date;
     endDate: Date;
+    status: string;
     // owner: IUser['_id']; //Relacion con la coleccion courses
     // customer: IUser['_id']; //Relacion con la coleccion courses
 }

@@ -5,7 +5,8 @@ import morgan from 'morgan';
 import bodyParser from'body-parser';
 
 //Importamos fichero de rutas
-import userRoutes from './routes/user.routes'
+import userRoutes from './routes/user.routes';
+import paymentsRoutes from './routes/payments.routes';
 
 //Inicializamos express
 const app = express();
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 
 //Llama a las rutas de la API
 app.use(userRoutes);
+app.use(paymentsRoutes);
 
 //Exportamos fichero como 'app'
 export default app;
